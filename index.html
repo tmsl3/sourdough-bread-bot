@@ -3,660 +3,617 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Study Buddy Bot</title>
+  <title>Sourdough Bread Bot 🍞</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-      background: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #fdf6ec;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 16px;
     }
 
-    .chat-container {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    .chat-shell {
       width: 100%;
-      max-width: 640px;
+      max-width: 680px;
       display: flex;
       flex-direction: column;
-      height: 90vh;
-      max-height: 780px;
+      height: 92vh;
+      min-height: 500px;
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid #e8ddc8;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
       overflow: hidden;
     }
 
-    /* Header */
+    /* ── Header ── */
     .chat-header {
-      background: #3b5bdb;
-      color: #fff;
+      background: #7c4b1e;
       padding: 18px 24px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       flex-shrink: 0;
     }
-
-    .bot-avatar {
-      width: 40px;
-      height: 40px;
-      background: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
+    .chat-header-icon {
+      font-size: 32px;
+      line-height: 1;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
     }
-
-    .chat-header-info h1 {
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 1.3;
+    .chat-header-text h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.01em;
     }
-
-    .chat-header-info p {
+    .chat-header-text p {
       font-size: 12px;
-      opacity: 0.82;
+      color: #e8c89a;
       margin-top: 2px;
     }
-
     .status-dot {
-      width: 8px;
-      height: 8px;
-      background: #69db7c;
+      width: 8px; height: 8px;
+      background: #5dd97c;
       border-radius: 50%;
       display: inline-block;
       margin-right: 5px;
     }
 
-    /* Messages */
+    /* ── Messages ── */
     .chat-messages {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 16px;
+      padding: 20px 20px 8px;
       display: flex;
       flex-direction: column;
       gap: 12px;
       scroll-behavior: smooth;
     }
 
-    .message {
+    .msg {
       display: flex;
       align-items: flex-end;
       gap: 8px;
-      max-width: 88%;
-      animation: fadeIn 0.2s ease;
+      max-width: 90%;
+      animation: fadeUp 0.18s ease both;
     }
-
-    @keyframes fadeIn {
+    @keyframes fadeUp {
       from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
 
-    .message.bot { align-self: flex-start; }
-    .message.user { align-self: flex-end; flex-direction: row-reverse; }
-
-    .message-avatar {
-      width: 30px;
-      height: 30px;
+    .avatar {
+      width: 34px; height: 34px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
+      background: #7c4b1e;
+      color: #fff;
+      font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      background: #dee2f5;
     }
+    .msg.user .avatar { background: #3b82d4; font-size: 13px; font-weight: 700; }
 
-    .message.user .message-avatar { background: #3b5bdb; color: #fff; }
-
-    .message-bubble {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.6;
-      white-space: pre-wrap;
+    .bubble {
+      padding: 11px 15px;
+      border-radius: 18px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #1f2328;
+      max-width: 100%;
       word-break: break-word;
     }
-
-    .message.bot .message-bubble {
-      background: #f1f3f9;
-      color: #1a1a2e;
+    .msg.bot .bubble {
+      background: #fdf6ec;
+      border: 1px solid #e8ddc8;
       border-bottom-left-radius: 4px;
     }
-
-    .message.user .message-bubble {
-      background: #3b5bdb;
+    .msg.user .bubble {
+      background: #7c4b1e;
       color: #fff;
       border-bottom-right-radius: 4px;
     }
+    .bubble strong { font-weight: 600; }
+    .bubble ul { padding-left: 18px; margin-top: 6px; }
+    .bubble li { margin-bottom: 3px; }
+    .bubble .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      background: #e8c89a;
+      color: #7c4b1e;
+      border-radius: 6px;
+      padding: 1px 7px;
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .bubble .cheerful {
+      margin-top: 8px;
+      color: #7c4b1e;
+      font-style: italic;
+      font-size: 13.5px;
+    }
+    .msg.user .bubble .cheerful { color: #e8c89a; }
 
-    /* Quick reply chips */
-    .quick-replies {
+    /* typing indicator */
+    .typing-bubble {
+      display: flex; align-items: center; gap: 4px;
+      padding: 12px 16px;
+    }
+    .typing-bubble span {
+      width: 7px; height: 7px;
+      background: #b89970;
+      border-radius: 50%;
+      animation: bounce 1.1s infinite;
+    }
+    .typing-bubble span:nth-child(2) { animation-delay: 0.18s; }
+    .typing-bubble span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    /* ── Suggestion chips ── */
+    .chips-row {
+      padding: 6px 20px 10px;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      padding: 0 16px 8px;
       flex-shrink: 0;
     }
-
-    .quick-reply-chip {
-      background: #eef0fb;
-      border: 1px solid #c5caf5;
-      color: #3b5bdb;
+    .chip {
+      background: #fdf0e0;
+      border: 1px solid #e0c8a0;
+      color: #7c4b1e;
+      font-size: 12.5px;
       border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
+      padding: 5px 13px;
       cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
+      transition: background 0.15s, border-color 0.15s;
       white-space: nowrap;
     }
+    .chip:hover { background: #f0dfc0; border-color: #c8a870; }
 
-    .quick-reply-chip:hover {
-      background: #dde1f8;
-      transform: translateY(-1px);
-    }
-
-    /* Typing indicator */
-    .typing-indicator {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 0 16px 4px;
-      flex-shrink: 0;
-    }
-
-    .typing-indicator.visible { display: flex; }
-
-    .typing-dots {
+    /* ── Input row ── */
+    .chat-input-row {
       display: flex;
-      gap: 4px;
-      background: #f1f3f9;
-      padding: 8px 14px;
-      border-radius: 16px;
-      border-bottom-left-radius: 4px;
-    }
-
-    .typing-dots span {
-      width: 7px;
-      height: 7px;
-      background: #aab0cc;
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
-
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-      40%            { transform: scale(1.1); opacity: 1;   }
-    }
-
-    /* Input area */
-    .chat-input-area {
-      padding: 12px 16px 16px;
-      border-top: 1px solid #e8eaf0;
-      display: flex;
+      padding: 12px 16px 14px;
       gap: 10px;
-      align-items: flex-end;
+      border-top: 1px solid #e8ddc8;
       flex-shrink: 0;
+      background: #fff;
     }
-
     #user-input {
       flex: 1;
-      border: 1.5px solid #dde1f8;
-      border-radius: 20px;
+      border: 1px solid #d8ccc0;
+      border-radius: 24px;
       padding: 10px 16px;
       font-size: 14px;
       font-family: inherit;
-      resize: none;
       outline: none;
-      max-height: 100px;
-      overflow-y: auto;
-      line-height: 1.5;
-      transition: border-color 0.2s;
+      background: #fdf9f5;
+      color: #1f2328;
+      resize: none;
+      height: 42px;
+      transition: border-color 0.15s;
     }
-
-    #user-input:focus { border-color: #3b5bdb; }
-
+    #user-input:focus { border-color: #7c4b1e; }
     #send-btn {
-      width: 40px;
-      height: 40px;
-      background: #3b5bdb;
+      background: #7c4b1e;
+      color: #fff;
       border: none;
       border-radius: 50%;
+      width: 42px; height: 42px;
+      font-size: 18px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
       flex-shrink: 0;
-      transition: background 0.15s, transform 0.1s;
     }
-
-    #send-btn:hover { background: #2f4cc4; transform: scale(1.05); }
-    #send-btn:active { transform: scale(0.96); }
-
-    #send-btn svg { fill: #fff; width: 18px; height: 18px; }
-
-    /* Human handoff banner */
-    .handoff-banner {
-      display: none;
-      margin: 0 16px 12px;
-      background: #fff9db;
-      border: 1px solid #ffe066;
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #7a5c00;
-      line-height: 1.5;
-    }
-
-    .handoff-banner.visible { display: block; }
+    #send-btn:hover { background: #5e3815; }
+    #send-btn:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
-
-<div class="chat-container">
+<div class="chat-shell">
   <!-- Header -->
   <div class="chat-header">
-    <div class="bot-avatar">📚</div>
-    <div class="chat-header-info">
-      <h1>Study Buddy Bot</h1>
-      <p><span class="status-dot"></span>Here to help you learn — not do the work for you</p>
+    <div class="chat-header-icon">🍞</div>
+    <div class="chat-header-text">
+      <h1>Sourdough Bread Bot</h1>
+      <p><span class="status-dot"></span>Here to help you understand the science of sourdough</p>
     </div>
   </div>
 
   <!-- Messages -->
   <div class="chat-messages" id="chat-messages"></div>
 
-  <!-- Typing indicator -->
-  <div class="typing-indicator" id="typing-indicator">
-    <div style="width:30px;height:30px;border-radius:50%;background:#dee2f5;display:flex;align-items:center;justify-content:center;font-size:14px;">📚</div>
-    <div class="typing-dots"><span></span><span></span><span></span></div>
+  <!-- Suggestion Chips -->
+  <div class="chips-row" id="chips-row">
+    <button class="chip" data-q="How does sourdough bread work?">How does sourdough work?</button>
+    <button class="chip" data-q="What happens during fermentation?">What happens during fermentation?</button>
+    <button class="chip" data-q="What role does the starter play?">What is a starter?</button>
+    <button class="chip" data-q="Why does hydration matter in sourdough?">Why does hydration matter?</button>
+    <button class="chip" data-q="How do I know when proofing is complete?">How do I know proofing is done?</button>
+    <button class="chip" data-q="Why do bakers score the dough?">Why score the dough?</button>
+    <button class="chip" data-q="What is the benefit of baking with steam?">Why bake with steam?</button>
+    <button class="chip" data-q="How can I improve crust color?">How to improve crust color?</button>
   </div>
-
-  <!-- Human handoff banner -->
-  <div class="handoff-banner" id="handoff-banner">
-    🙋 <strong>Connecting you to a human advisor…</strong><br>
-    A real person will be with you shortly. In the meantime, feel free to keep chatting or try rephrasing your question.
-  </div>
-
-  <!-- Quick reply chips -->
-  <div class="quick-replies" id="quick-replies"></div>
 
   <!-- Input -->
-  <div class="chat-input-area">
-    <textarea id="user-input" placeholder="Ask me anything about your studies…" rows="1"></textarea>
-    <button id="send-btn" title="Send">
-      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
+  <div class="chat-input-row">
+    <input type="text" id="user-input" placeholder="Ask something about sourdough…" autocomplete="off" />
+    <button id="send-btn" title="Send">&#10148;</button>
   </div>
 </div>
 
 <script>
-  // ─── State ────────────────────────────────────────────────────────────────
-  const state = {
-    subject: null,          // currently tracked subject/topic
-    failedAttempts: 0,      // consecutive misunderstood questions
-    handedOff: false,       // true after human handoff triggered
-  };
+// ─────────────────────────────────────────────
+//  State
+// ─────────────────────────────────────────────
+let strikeCount = 0;       // consecutive "didn't understand" strikes
+let awaitingTopic = false; // bot asked for a topic, waiting for it
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
-  const messagesEl    = document.getElementById('chat-messages');
-  const typingEl      = document.getElementById('typing-indicator');
-  const inputEl       = document.getElementById('user-input');
-  const sendBtn       = document.getElementById('send-btn');
-  const quickRepliesEl = document.getElementById('quick-replies');
-  const handoffBanner = document.getElementById('handoff-banner');
+// ─────────────────────────────────────────────
+//  Knowledge base
+// ─────────────────────────────────────────────
+const KB = [
+  {
+    keys: ["how does sourdough work","how sourdough bread work","explain sourdough","science of sourdough","how is sourdough made"],
+    tag: "The Science",
+    answer: `Sourdough is a living chemistry project! The magic comes from two groups of microorganisms living in your starter: <strong>wild yeasts</strong> and <strong>lactic acid bacteria (LAB)</strong>.<br><br>
+<ul>
+  <li>🌾 <strong>Wild yeasts</strong> (mainly <em>Saccharomyces</em> and <em>Kazachstania</em>) eat sugars in the flour and produce <strong>CO₂ gas</strong> — that's what makes your dough rise.</li>
+  <li>🦠 <strong>LAB</strong> (like <em>Lactobacillus</em>) produce <strong>lactic and acetic acids</strong>, giving sourdough its signature tang and also acting as a natural preservative.</li>
+  <li>🔗 <strong>Gluten</strong> (formed when water hydrates flour proteins) traps those gas bubbles, building the open crumb structure you love.</li>
+</ul>`,
+    cheerful: "Happy baking! 🍞"
+  },
+  {
+    keys: ["fermentation","what happens during","bulk ferment","autolyse","bulk rise"],
+    tag: "Fermentation",
+    answer: `Fermentation is where the real flavour magic happens! Think of it as the dough "waking up and getting to work." It happens in two main stages:<br><br>
+<ul>
+  <li>🌡️ <strong>Bulk fermentation</strong>: After mixing, the dough rests (typically 4–12 hours depending on temperature). Yeast produces CO₂ expanding the dough; bacteria produce acids building flavour.</li>
+  <li>💤 <strong>Cold retard (final proof)</strong>: The shaped dough rests in the fridge overnight. Slow, cold fermentation concentrates acidity and develops complex flavour — like slow-cooking vs. fast-cooking.</li>
+</ul>
+Temperature is the main dial: <strong>warmer = faster, more acidic; cooler = slower, more complex.</strong>`,
+    cheerful: "Experiment with timing — every kitchen is a little different! 🌡️"
+  },
+  {
+    keys: ["starter","levain","what is a starter","role does the starter","wild culture","feeding starter","maintain starter"],
+    tag: "The Starter",
+    answer: `The starter is your <strong>living leavening agent</strong> — a fermented mixture of flour and water that's home to wild yeasts and lactic acid bacteria.<br><br>
+Think of it like a sourdough "pet" 🐾:<br><br>
+<ul>
+  <li>🍽️ You <strong>feed it</strong> fresh flour and water regularly to keep the microbes healthy and active.</li>
+  <li>⚡ A <strong>ripe, active starter</strong> (peaked and bubbly) gives maximum lift and flavour.</li>
+  <li>📊 The <strong>hydration</strong> of your starter (equal weights flour/water = 100% hydration) influences yeast vs. bacterial balance — stiffer starters favour acetic acid (more tang); wetter starters favour lactic acid (more yogurt-like).</li>
+</ul>
+A healthy starter is your single biggest tool for great bread.`,
+    cheerful: "Keep your starter happy and it'll keep you baking! Happy baking! 🍞"
+  },
+  {
+    keys: ["hydration","why does hydration","hydration matter","dough hydration","wet dough","dry dough","water percentage","water ratio"],
+    tag: "Hydration",
+    answer: `Hydration in sourdough is the ratio of water to flour by weight. A 75% hydration dough has 75g of water per 100g of flour.<br><br>
+<strong>Why it matters:</strong><br>
+<ul>
+  <li>💧 <strong>Higher hydration (78–90%)</strong>: More open, irregular crumb; requires more skill to shape (slacker, stickier dough); promotes faster fermentation.</li>
+  <li>🪨 <strong>Lower hydration (65–72%)</strong>: Tighter, easier-to-handle dough; denser crumb; more forgiving for beginners.</li>
+  <li>🌾 <strong>Flour matters too!</strong> Whole grain and high-protein flours absorb more water, so the "same" 75% can feel very different depending on your flour.</li>
+</ul>
+Start at 70–72% if you're learning. You can increase as your technique improves.`,
+    cheerful: "Think of hydration as a difficulty setting — start easy, level up! 😄"
+  },
+  {
+    keys: ["proofing","proof","when is it done","how do I know when proofing","final proof","over proof","under proof","poke test"],
+    tag: "Proofing",
+    answer: `Proofing is the final rise of your shaped dough. Nailing it is one of the most important skills in sourdough.<br><br>
+<strong>Signs it's ready:</strong><br>
+<ul>
+  <li>🤏 <strong>Poke test</strong>: Gently poke the dough with a floured finger. It should spring back <em>slowly</em> (about 2–3 seconds), leaving a small indent. Springs back instantly = underproofed. Doesn't spring back = overproofed.</li>
+  <li>📐 <strong>Volume increase</strong>: Roughly 50–75% larger than shaped size (not doubled, unlike commercial yeast).</li>
+  <li>🫧 <strong>Visible bubbles</strong>: You can see small bubbles just below the surface — a sign of active fermentation throughout.</li>
+  <li>🪵 <strong>Jiggle test</strong>: Shake the banneton lightly — a properly proofed loaf wobbles like jelly, not solid.</li>
+</ul>`,
+    cheerful: "Practice makes perfect — every loaf teaches you something new! Happy baking! 🍞"
+  },
+  {
+    keys: ["score","scoring","why do bakers score","why score","slash","lame","ear","oven spring"],
+    tag: "Scoring",
+    answer: `Scoring is the art of slashing the dough's surface just before it goes into the oven. It's both practical and creative! 🎨<br><br>
+<strong>Why it matters:</strong><br>
+<ul>
+  <li>💨 <strong>Controlled expansion</strong>: As the dough hits oven heat, CO₂ expands rapidly (oven spring). Without a score, the loaf bursts unpredictably along weak spots.</li>
+  <li>👂 <strong>The "ear"</strong>: A single deep score at an angle creates that beautiful raised flap called an ear — a sign of good oven spring and proper proofing.</li>
+  <li>🌡️ <strong>Heat distribution</strong>: Scores open up the interior, allowing heat to reach the crumb evenly.</li>
+</ul>
+Use a sharp lame or razor blade, score decisively at 30–45°, and don't hesitate — a confident slash gives a better result than a timid one.`,
+    cheerful: "Score boldly! Happy baking! 🍞"
+  },
+  {
+    keys: ["steam","benefit of steam","baking with steam","dutch oven","covered bake","crust","steam in oven"],
+    tag: "Steam & Baking",
+    answer: `Steam in the first phase of baking is one of sourdough's biggest secrets! 💨<br><br>
+<strong>Here's why it's so important:</strong><br>
+<ul>
+  <li>🏃 <strong>Keeps the crust pliable</strong>: Steam prevents the outer skin from setting too early, allowing maximum oven spring before the crust locks in.</li>
+  <li>✨ <strong>Gelatinises surface starch</strong>: Steam gelatinises the starch on the dough's surface, which later caramelises into a glossy, blistered, crackly crust.</li>
+  <li>🍳 <strong>Dutch oven method</strong>: Baking in a covered cast iron pot traps the bread's own steam perfectly for the first 20 minutes, then you remove the lid to brown and crisp the crust.</li>
+</ul>`,
+    cheerful: "A good crust starts with great steam! Happy baking! 🍞"
+  },
+  {
+    keys: ["crust color","improve crust","dark crust","golden crust","maillard","caramelise","caramelize","blistered crust","crust too pale","crust colour"],
+    tag: "Crust Color",
+    answer: `A deep, mahogany crust is the hallmark of great sourdough. Color comes from two reactions:<br><br>
+<ul>
+  <li>🧪 <strong>Maillard reaction</strong>: Amino acids + reducing sugars → hundreds of complex flavour and colour compounds. Happens from ~140°C / 285°F.</li>
+  <li>🍬 <strong>Caramelisation</strong>: Sugars brown at around 160°C / 320°F, adding sweetness and depth.</li>
+</ul>
+<strong>Tips to improve crust color:</strong><br>
+<ul>
+  <li>🌡️ Bake at a higher temperature (230–250°C / 450–480°F).</li>
+  <li>⏱️ Remove the Dutch oven lid for the last 20–25 minutes and keep baking until deep brown.</li>
+  <li>💧 Well-fermented dough has more sugars available → more colour.</li>
+  <li>🌾 Add a small amount of whole wheat flour — it darkens beautifully.</li>
+  <li>🔻 Lower your oven rack so the bottom gets more heat.</li>
+</ul>`,
+    cheerful: "Don't be afraid of color — that deep brown is pure flavour! Happy baking! 🍞"
+  }
+];
 
-  function scrollToBottom() {
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+// ─────────────────────────────────────────────
+//  Refusal topics
+// ─────────────────────────────────────────────
+const BAKE_PATTERNS = [/bake (the bread|it|for me|my bread)/i, /make (the bread|it|sourdough) for me/i, /can you bake/i];
+const ASSIGNMENT_PATTERNS = [/do my (assignment|homework|exam|test|quiz)/i, /write (my|the) (essay|report|assignment)/i, /answer (my|the) (exam|test|assignment)/i, /complete (my|the) (assignment|homework)/i, /can you (do|write|complete) (my|this) (essay|homework|assignment|exam|report)/i];
+const OFF_TOPIC_PATTERNS = [/weather/i, /recipe for (pizza|pasta|cake|cookies|chicken)/i, /stock (market|price)/i, /sports/i, /politics/i, /celebrity/i, /movie/i, /\bChatGPT\b/i];
+
+// ─────────────────────────────────────────────
+//  Helpers
+// ─────────────────────────────────────────────
+function normalize(text) {
+  return text.toLowerCase().replace(/['']/g, "'").replace(/[^a-z0-9 ']/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function matchKB(text) {
+  const n = normalize(text);
+  for (const entry of KB) {
+    if (entry.keys.some(k => n.includes(k))) return entry;
+  }
+  // fuzzy: check individual words from keys
+  for (const entry of KB) {
+    const allWords = entry.keys.join(" ");
+    const keywords = [...new Set(allWords.split(" ").filter(w => w.length > 4))];
+    const matched = keywords.filter(w => n.includes(w));
+    if (matched.length >= 2) return entry;
+  }
+  return null;
+}
+
+function isRefusal_Bake(text) { return BAKE_PATTERNS.some(p => p.test(text)); }
+function isRefusal_Assignment(text) { return ASSIGNMENT_PATTERNS.some(p => p.test(text)); }
+function isRefusal_OffTopic(text) { return OFF_TOPIC_PATTERNS.some(p => p.test(text)); }
+
+// ─────────────────────────────────────────────
+//  Response logic
+// ─────────────────────────────────────────────
+function getBotResponse(userText) {
+  const t = userText.trim();
+
+  // — Greetings
+  if (/^(hi|hello|hey|howdy|good (morning|afternoon|evening)|what('s| is) up|sup)\b/i.test(t)) {
+    strikeCount = 0;
+    awaitingTopic = true;
+    return {
+      tag: null,
+      answer: `Hello there, fellow bread explorer! 👋 I'm <strong>Sourdough Bread Bot</strong>, here to help you understand the science and craft of sourdough — from wild yeast to crackly crusts!<br><br>
+What sourdough topic would you like to explore today? Feel free to ask anything, or tap one of the suggestion buttons below.`,
+      cheerful: null
+    };
   }
 
-  function addMessage(text, who) {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('message', who);
-
-    const avatar = document.createElement('div');
-    avatar.classList.add('message-avatar');
-    avatar.textContent = who === 'bot' ? '📚' : '🧑';
-
-    const bubble = document.createElement('div');
-    bubble.classList.add('message-bubble');
-    bubble.textContent = text;
-
-    wrapper.appendChild(avatar);
-    wrapper.appendChild(bubble);
-    messagesEl.appendChild(wrapper);
-    scrollToBottom();
+  // — Thank you
+  if (/^(thanks|thank you|cheers|awesome|perfect|great|that('s| was) helpful)/i.test(t)) {
+    strikeCount = 0;
+    return {
+      tag: null,
+      answer: `You're so welcome! 😊 Every question gets you one step closer to that perfect loaf. Anything else you'd like to dig into?`,
+      cheerful: "Happy baking! 🍞"
+    };
   }
 
-  function showTyping() {
-    typingEl.classList.add('visible');
-    scrollToBottom();
+  // — Bake for me (hard refusal)
+  if (isRefusal_Bake(t)) {
+    strikeCount = 0;
+    return {
+      tag: "🚫 Can't Do That!",
+      answer: `Ha — I wish I had hands! 😄 I'm a <em>teaching</em> bot, so I can't actually bake bread for you. But I can explain every step of the process so <em>you</em> can bake an amazing loaf yourself!<br><br>
+Would you like to learn how sourdough works, how to manage fermentation, or something else? If you need hands-on help, I can connect you with a human instructor — just say the word.`,
+      cheerful: null
+    };
   }
 
-  function hideTyping() {
-    typingEl.classList.remove('visible');
+  // — Assignment / exam (hard refusal → handoff)
+  if (isRefusal_Assignment(t)) {
+    strikeCount = 0;
+    return {
+      tag: "🚫 That's Your Work!",
+      answer: `I'm here to help you <strong>understand</strong> sourdough, not to do your work for you — that wouldn't actually help you learn! 📚<br><br>
+I'd be happy to explain any <em>concept</em> your assignment covers. For anything beyond that, I'll hand you off to a human instructor who can guide you properly.`,
+      cheerful: null
+    };
   }
 
-  function setQuickReplies(chips) {
-    quickRepliesEl.innerHTML = '';
-    chips.forEach(label => {
-      const btn = document.createElement('button');
-      btn.classList.add('quick-reply-chip');
-      btn.textContent = label;
-      btn.addEventListener('click', () => {
-        setQuickReplies([]);
-        handleUserMessage(label);
-      });
-      quickRepliesEl.appendChild(btn);
-    });
+  // — Off-topic (hard refusal → handoff)
+  if (isRefusal_OffTopic(t)) {
+    strikeCount = 0;
+    return {
+      tag: "Off-Topic",
+      answer: `That's a bit outside my flour-dusted world! 🌾 I'm specialised in sourdough bread science and I don't want to give you inaccurate information on other topics.<br><br>
+I'll pass you along to a human who can help with that. In the meantime, can I answer anything about sourdough?`,
+      cheerful: null
+    };
   }
 
-  function triggerHandoff() {
-    state.handedOff = true;
-    handoffBanner.classList.add('visible');
-    inputEl.disabled = true;
-    sendBtn.disabled = true;
-    inputEl.placeholder = 'Chat disabled — a human advisor will take over.';
-    setQuickReplies([]);
+  // — If bot previously asked for a topic, treat anything as a topic cue
+  if (awaitingTopic) {
+    awaitingTopic = false;
+    const entry = matchKB(t);
+    if (entry) {
+      strikeCount = 0;
+      return entry;
+    }
+    // Didn't match even as a topic — fall through to strike logic below
   }
 
-  // ─── Intent detection ─────────────────────────────────────────────────────
-  function detectIntent(text) {
-    const t = text.toLowerCase().trim();
-
-    // Cheating / doing work for them
-    if (/\b(do my|write my|complete my|finish my|solve my|answer my|write for me|do for me|take my|sit my|cheat)\b/.test(t) &&
-        /\b(assignment|homework|exam|test|quiz|essay|coursework|project|paper)\b/.test(t)) {
-      return 'CHEAT';
-    }
-    if (/\b(write (the|an?|my) (essay|report|paper|assignment)|do (the|my) homework)\b/.test(t)) {
-      return 'CHEAT';
-    }
-
-    // Non-academic / off-topic
-    if (/\b(recipe|movie|weather|sport|joke|dating|relationship|celebrity|gossip|news|stock|crypto|invest)\b/.test(t)) {
-      return 'OFF_TOPIC';
-    }
-
-    // Explain a topic
-    if (/\b(explain|what is|what are|define|tell me about|describe|meaning of|concept of)\b/.test(t)) {
-      return 'EXPLAIN';
-    }
-
-    // Break down a formula / equation
-    if (/\b(formula|equation|break(?: it)? down|break down|don'?t understand|simplify|how does .* work|how do i (use|apply|calculate))\b/.test(t)) {
-      return 'FORMULA';
-    }
-
-    // Practice question
-    if (/\b(practice|quiz me|test me|give me (a |an )?question|example question|mock question|exercise)\b/.test(t)) {
-      return 'PRACTICE';
-    }
-
-    // Greeting
-    if (/^(hi|hello|hey|howdy|hiya|good (morning|afternoon|evening))[!.,]?$/.test(t)) {
-      return 'GREET';
-    }
-
-    // Set subject shortcut ("my subject is X" / "topic is X")
-    if (/\b(my (subject|topic|course) is|studying|i('m| am) studying|i study)\b/.test(t)) {
-      return 'SET_SUBJECT';
-    }
-
-    return 'UNKNOWN';
+  // — Knowledge base match
+  const entry = matchKB(t);
+  if (entry) {
+    strikeCount = 0;
+    return entry;
   }
 
-  // Pull a topic from the user's message (best-effort)
-  function extractTopic(text) {
-    const patterns = [
-      /(?:explain|about|on|regarding|for|understand|studying)\s+(.+?)(?:\?|$|,|\.|please|can you)/i,
-      /(?:my subject is|topic is|studying|i study)\s+(.+?)(?:\?|$|,|\.)/i,
-      /(?:formula for|equation for)\s+(.+?)(?:\?|$|,|\.)/i,
-      /(?:practice|quiz me on|question on|question about)\s+(.+?)(?:\?|$|,|\.)/i,
-    ];
-    for (const re of patterns) {
-      const m = text.match(re);
-      if (m && m[1].trim().length > 1) return m[1].trim();
-    }
-    return null;
+  // — No match: Two-Strike Rule
+  strikeCount++;
+  if (strikeCount === 1) {
+    awaitingTopic = true;
+    return {
+      tag: "Hmm… 🤔",
+      answer: `I'm not quite sure I caught that! Sourdough has a big vocabulary, so let me make sure I understand.<br><br>
+Could you rephrase or tell me which sourdough topic you're curious about? For example:<br>
+<ul>
+  <li>Starter & fermentation</li>
+  <li>Hydration & dough handling</li>
+  <li>Proofing & shaping</li>
+  <li>Scoring & baking</li>
+  <li>Crust & flavour</li>
+</ul>`,
+      cheerful: null
+    };
+  } else {
+    // Second strike → offer human handoff
+    strikeCount = 0;
+    return {
+      tag: "Let's Get You Help",
+      answer: `I'm sorry, I've had two goes and I'm still not sure I understand your question — and I don't want to give you wrong information! 🙏<br><br>
+It's probably best I <strong>connect you with a human expert</strong> who can help you more precisely. You can reach one of our instructors at:<br><br>
+📧 <strong>support@sourdoughlearning.example.com</strong><br><br>
+In the meantime, if there's a different sourdough topic I can help with, I'm still here!`,
+      cheerful: null
+    };
   }
+}
 
-  // ─── Response builders ────────────────────────────────────────────────────
-  function buildExplainResponse(topic) {
-    return `Great question! Here's a simple breakdown of "${topic}":\n\n` +
-      `1. Start with the core idea — what is ${topic} fundamentally about?\n` +
-      `2. Think of a real-world analogy that clicks for you.\n` +
-      `3. Break it into its key components or steps.\n\n` +
-      `Can you tell me a little more about what specifically confuses you about ${topic}? ` +
-      `That way I can tailor my explanation to exactly what you need. 🎯`;
-  }
+// ─────────────────────────────────────────────
+//  DOM rendering
+// ─────────────────────────────────────────────
+const messagesEl = document.getElementById("chat-messages");
+const inputEl    = document.getElementById("user-input");
+const sendBtn    = document.getElementById("send-btn");
 
-  function buildFormulaResponse(topic) {
-    const t = topic || 'this formula';
-    return `Let's break down ${t} step by step:\n\n` +
-      `• What does each symbol/variable represent?\n` +
-      `• What is the formula actually calculating or describing?\n` +
-      `• How would you apply it to a simple example?\n\n` +
-      `If you paste the formula here I can walk you through it in detail — ` +
-      `what does each part look like to you so far?`;
-  }
+function addMessage(role, content) {
+  const wrapper = document.createElement("div");
+  wrapper.className = `msg ${role}`;
 
-  function buildPracticeResponse(topic) {
-    const t = topic || 'your topic';
-    return `Here's a practice question on ${t}:\n\n` +
-      `❓ Think about a key concept or process in ${t}. ` +
-      `Can you explain it in your own words, and give one real-world example where it applies?\n\n` +
-      `Try answering it first — then share your answer with me and I'll give you feedback! 💪`;
-  }
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = role === "bot" ? "🍞" : "You";
 
-  function buildSetSubjectResponse(topic) {
-    state.subject = topic;
-    return `Got it — I've noted that you're studying ${topic}. 📝\n\n` +
-      `How can I help? You can ask me to:\n` +
-      `• Explain a concept in simple terms\n` +
-      `• Break down a formula or equation\n` +
-      `• Give you a practice question`;
-  }
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = content;
 
-  function buildGreetResponse() {
-    if (state.subject) {
-      return `Hey! Good to see you again. We're working on ${state.subject} — what would you like to tackle today?`;
-    }
-    return `Hi there! 👋 I'm Study Buddy Bot.\n\n` +
-      `I'm here to help you understand your subject — not do your homework for you! 😄\n\n` +
-      `What subject or topic are you studying?`;
-  }
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  messagesEl.appendChild(wrapper);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
 
-  // ─── Core responder ───────────────────────────────────────────────────────
-  function getResponse(text) {
-    if (state.handedOff) {
-      return "You've been connected to a human advisor. They'll take it from here! 🙋";
-    }
+function addBotMessage(response) {
+  let html = "";
+  if (response.tag) html += `<span class="tag">${response.tag}</span><br>`;
+  html += response.answer;
+  if (response.cheerful) html += `<p class="cheerful">${response.cheerful}</p>`;
+  addMessage("bot", html);
+}
 
-    const intent  = detectIntent(text);
-    const topicFromMsg = extractTopic(text);
-    const topic   = topicFromMsg || state.subject;
+function showTyping() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "msg bot";
+  wrapper.id = "typing-indicator";
 
-    // Update subject if a new one is mentioned
-    if (topicFromMsg && intent !== 'CHEAT' && intent !== 'OFF_TOPIC') {
-      state.subject = topicFromMsg;
-    }
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = "🍞";
 
-    switch (intent) {
-      case 'GREET':
-        state.failedAttempts = 0;
-        return { text: buildGreetResponse(), chips: ['Explain a concept', 'Break down a formula', 'Give me a practice question'] };
+  const bubble = document.createElement("div");
+  bubble.className = "bubble typing-bubble";
+  bubble.innerHTML = "<span></span><span></span><span></span>";
 
-      case 'SET_SUBJECT':
-        state.failedAttempts = 0;
-        if (topic) {
-          return { text: buildSetSubjectResponse(topic), chips: ['Explain it to me', 'Give me a practice question', 'Break down a formula'] };
-        }
-        return { text: "What subject or topic are you studying? I'd love to help once I know where to focus!" };
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  messagesEl.appendChild(wrapper);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
 
-      case 'EXPLAIN':
-        state.failedAttempts = 0;
-        if (!topic) {
-          return {
-            text: "I'd love to explain that! What subject or topic should I focus on?",
-            chips: ['Mathematics', 'Physics', 'Biology', 'Chemistry', 'History', 'Literature']
-          };
-        }
-        return { text: buildExplainResponse(topic), chips: ['Give me a practice question', 'Break it down further', 'Try another topic'] };
+function removeTyping() {
+  const el = document.getElementById("typing-indicator");
+  if (el) el.remove();
+}
 
-      case 'FORMULA':
-        state.failedAttempts = 0;
-        if (!topic) {
-          return { text: "Sure! Paste the formula or tell me which subject it's from, and I'll walk you through it." };
-        }
-        return { text: buildFormulaResponse(topic), chips: ['Give me a practice question', 'Explain another concept'] };
+function sendMessage(text) {
+  if (!text.trim()) return;
+  addMessage("user", text);
+  inputEl.value = "";
+  showTyping();
 
-      case 'PRACTICE':
-        state.failedAttempts = 0;
-        if (!topic) {
-          return {
-            text: "I'll quiz you! Which subject or topic should the question be on?",
-            chips: ['Mathematics', 'Physics', 'Biology', 'Chemistry', 'History', 'Literature']
-          };
-        }
-        return { text: buildPracticeResponse(topic), chips: ['Another question', 'Explain this topic', 'Different topic'] };
-
-      case 'CHEAT':
-        state.failedAttempts = 0;
-        // Immediately hand off
-        setTimeout(() => triggerHandoff(), 2200);
-        return {
-          text: "I'm afraid I can't do your assignment or exam for you — that wouldn't actually help you learn, and it wouldn't be fair to you or your institution. 🎓\n\n" +
-                "What I *can* do is explain the concepts, break down tricky parts, and give you practice questions so you're ready to tackle it yourself.\n\n" +
-                "That said, since this seems to go beyond study support, I'm going to connect you with a human advisor who may be better placed to help. One moment…"
-        };
-
-      case 'OFF_TOPIC':
-        state.failedAttempts = 0;
-        setTimeout(() => triggerHandoff(), 2200);
-        return {
-          text: "That's a bit outside my lane as a study assistant — I'm best at academic topics like explanations, formulas, and practice questions. 📚\n\n" +
-                "For this one, let me connect you with a human who can point you in the right direction!"
-        };
-
-      case 'UNKNOWN':
-      default:
-        state.failedAttempts++;
-        if (state.failedAttempts >= 2) {
-          // Offer to connect to a human
-          setTimeout(() => {
-            addMessage(
-              "I've had trouble understanding your last couple of messages. Would you like me to connect you with a human advisor instead?",
-              'bot'
-            );
-            setQuickReplies(['Yes, connect me to a human', 'No, let me rephrase']);
-          }, 800);
-          return null; // response handled async
-        }
-        return {
-          text: "Hmm, I'm not quite sure I understood that. 🤔\n\n" +
-                "I can help you with:\n• Explaining a concept in simple terms\n• Breaking down a formula\n• Giving you a practice question\n\nCould you try rephrasing, or let me know what subject you're working on?",
-          chips: ['Explain a topic', 'Break down a formula', 'Give me a practice question']
-        };
-    }
-  }
-
-  // ─── Send flow ────────────────────────────────────────────────────────────
-  function handleUserMessage(text) {
-    const clean = text.trim();
-    if (!clean) return;
-
-    // Handle human handoff confirmation
-    if (clean.toLowerCase().includes('yes, connect me')) {
-      addMessage(clean, 'user');
-      showTyping();
-      setTimeout(() => {
-        hideTyping();
-        addMessage("Of course! Connecting you to a human advisor now. They'll be able to help you more directly. 🙋", 'bot');
-        triggerHandoff();
-      }, 1000);
-      return;
-    }
-
-    if (clean.toLowerCase().includes('no, let me rephrase')) {
-      addMessage(clean, 'user');
-      showTyping();
-      setTimeout(() => {
-        hideTyping();
-        state.failedAttempts = 0;
-        addMessage("No problem! Take your time rephrasing — I'm all ears. What are you trying to find out?", 'bot');
-        setQuickReplies(['Explain a topic', 'Break down a formula', 'Give me a practice question']);
-      }, 1000);
-      return;
-    }
-
-    addMessage(clean, 'user');
-    setQuickReplies([]);
-    showTyping();
-
-    // Simulate bot thinking delay (400–900ms)
-    const delay = 400 + Math.random() * 500;
-
-    setTimeout(() => {
-      hideTyping();
-      const response = getResponse(clean);
-      if (response === null) return; // handled asynchronously in getResponse
-      if (typeof response === 'string') {
-        addMessage(response, 'bot');
-      } else {
-        addMessage(response.text, 'bot');
-        if (response.chips && response.chips.length) {
-          setQuickReplies(response.chips);
-        }
-      }
-    }, delay);
-  }
-
-  // ─── Event listeners ──────────────────────────────────────────────────────
-  sendBtn.addEventListener('click', () => {
-    handleUserMessage(inputEl.value);
-    inputEl.value = '';
-    inputEl.style.height = 'auto';
-  });
-
-  inputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleUserMessage(inputEl.value);
-      inputEl.value = '';
-      inputEl.style.height = 'auto';
-    }
-  });
-
-  // Auto-grow textarea
-  inputEl.addEventListener('input', () => {
-    inputEl.style.height = 'auto';
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
-  });
-
-  // ─── Boot ─────────────────────────────────────────────────────────────────
   setTimeout(() => {
-    showTyping();
-    setTimeout(() => {
-      hideTyping();
-      addMessage(
-        "Hi there! 👋 I'm Study Buddy Bot.\n\n" +
-        "I'm here to help you understand your subject — not do your homework for you! 😄\n\n" +
-        "What subject or topic are you studying right now?",
-        'bot'
-      );
-      setQuickReplies(['Mathematics', 'Physics', 'Biology', 'Chemistry', 'History', 'Literature']);
-    }, 900);
-  }, 400);
+    removeTyping();
+    const response = getBotResponse(text);
+    addBotMessage(response);
+  }, 520 + Math.random() * 300);
+}
+
+sendBtn.addEventListener("click", () => sendMessage(inputEl.value));
+inputEl.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(inputEl.value); }
+});
+
+// Suggestion chips
+document.getElementById("chips-row").addEventListener("click", e => {
+  if (e.target.matches(".chip")) {
+    sendMessage(e.target.dataset.q);
+  }
+});
+
+// ─────────────────────────────────────────────
+//  Opening message
+// ─────────────────────────────────────────────
+setTimeout(() => {
+  addBotMessage({
+    tag: null,
+    answer: `Hey there, bread lover! 🍞 I'm <strong>Sourdough Bread Bot</strong> — your friendly guide to the science and craft of sourdough baking.<br><br>
+I can help you understand things like:<br>
+<ul>
+  <li>How wild yeast and bacteria make your bread rise</li>
+  <li>What really happens during fermentation</li>
+  <li>Why hydration, proofing, and scoring matter</li>
+  <li>How to get that gorgeous deep-brown, crackly crust</li>
+</ul>
+<strong>What sourdough topic would you like to explore today?</strong> Tap a suggestion below or type your own question!`,
+    cheerful: null
+  });
+}, 400);
 </script>
 </body>
 </html>
