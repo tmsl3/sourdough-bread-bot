@@ -340,7 +340,7 @@ Use a sharp lame or razor blade, score decisively at 30–45°, and don't hesita
     cheerful: "Score boldly! Happy baking! 🍞"
   },
   {
-    keys: ["steam","benefit of steam","baking with steam","dutch oven","covered bake","crust","steam in oven"],
+    keys: ["steam","benefit of steam","baking with steam","dutch oven","covered bake","steam crust","crust pliability","steam in oven"],
     tag: "Steam & Baking",
     answer: `Steam in the first phase of baking is one of sourdough's biggest secrets! 💨<br><br>
 <strong>Here's why it's so important:</strong><br>
@@ -368,6 +368,65 @@ Use a sharp lame or razor blade, score decisively at 30–45°, and don't hesita
   <li>🔻 Lower your oven rack so the bottom gets more heat.</li>
 </ul>`,
     cheerful: "Don't be afraid of color — that deep brown is pure flavour! Happy baking! 🍞"
+  },
+  {
+    keys: ["31°c", "31c", "31 degree", "humid", "dough collapsing", "soup", "collapsing into soup", "tropical", "hot kitchen", "dough turns to liquid"],
+    tag: "Tropical Fermentation Diagnostic",
+    answer: `In hot, humid ambient temperatures (30°C–32°C), fermentation moves roughly <strong>2x to 3x faster</strong> than standard European or North American recipe guides.<br><br>
+<ul>
+  <li><strong>What happened:</strong> Excessive heat accelerates enzymatic activity. Protease enzymes break down the gluten network before enough structure can be baked in, turning the dough into a sticky, unshapeable "soup".</li>
+  <li><strong>Immediate fix:</strong> Cut bulk fermentation time down to 2.5–3.5 hours, use ice-cold water (around 15°C–18°C) when mixing, and move the dough to an air-conditioned room (24°C) or straight into the fridge earlier.</li>
+</ul>`,
+    cheerful: "Control the dough temperature, not just the clock! 🌡️"
+  },
+  {
+    keys: ["is my loaf overproofed", "overproofed", "underproofed", "poke test before oven", "how do i know if my loaf is overproofed"],
+    tag: "The Poke Test Diagnostic",
+    answer: `Use the floured finger <strong>Poke Test</strong> (press in about 1/2 inch / 1.5 cm):<br><br>
+<ul>
+  <li><strong>Underproofed:</strong> Springs back instantly and completely. Needs more time to build gas.</li>
+  <li><strong>Properly Proofed:</strong> Springs back slowly and partially, leaving a gentle shallow dimple. Ready for the oven!</li>
+  <li><strong>Overproofed:</strong> Leaves an indent that does not spring back at all, and dough may feel fragile or deflate slightly.</li>
+</ul>
+<em>Salvage tip:</em> If severely overproofed, do not slash deeply. Bake immediately in a preheated Dutch oven or tip it into an oiled loaf pan as a focaccia to prevent wasting the ingredients!`,
+    cheerful: "Catch it when the spring is gentle and steady! 🍞"
+  },
+  {
+    keys: ["forgot to feed my starter", "5 days in the fridge", "fridge 5 days", "throw it away", "revive starter", "neglected starter", "hooch"],
+    tag: "Starter Revival & Zero-Waste",
+    answer: `<strong>Do NOT throw it away!</strong> A starter left in the fridge for 5 days is completely fine and very resilient.<br><br>
+<ul>
+  <li><strong>Clear/Dark Liquid on Top?</strong> That is "hooch" (alcohol byproduct of fermentation). Pour it off for a milder flavour, or stir it back in for extra tang.</li>
+  <li><strong>Revival Step:</strong> Discard all but 20g of the starter culture. Feed with 40g water and 40g unbleached flour (1:2:2 ratio). Keep it in a warm spot.</li>
+  <li><strong>Ready Status:</strong> It will typically bounce back to doubling in size within 1 to 2 feeding cycles.</li>
+</ul>
+Only discard starter if you see visible fuzzy mold (pink, orange, green, or black furry spots).`,
+    cheerful: "Save the culture, save the flour! 🌾"
+  },
+  {
+    keys: ["can i sell this", "margin per loaf", "cost per loaf", "bakery margin", "pricing sourdough", "selling bread","sell this","profit per loaf"],
+    tag: "Micro-Bakery Unit Economics",
+    answer: `Yes! Micro-baking can be a viable home enterprise. Here is a simple margin calculation framework for a standard 750g country loaf:<br><br>
+<ul>
+  <li><strong>Flour (450g high protein):</strong> ~RM 2.00 – RM 2.80</li>
+  <li><strong>Water, Salt, Starter:</strong> ~RM 0.30</li>
+  <li><strong>Electricity / Gas & Baking Paper:</strong> ~RM 1.00 – RM 1.50</li>
+  <li><strong>Packaging (kraft bag):</strong> ~RM 0.50</li>
+  <li><strong>Total Direct Cost (COGS):</strong> ~RM 3.80 – RM 5.10 per loaf</li>
+</ul>
+Retail sourdough typically sells for <strong>RM 14.00 – RM 22.00</strong> in urban and suburban markets. That delivers a <strong>60% to 75% gross margin</strong>, giving healthy room to cover your time and labor.`,
+    cheerful: "Turn kitchen science into a sustainable home business! 💰"
+  },
+  {
+    keys: ["all purpose flour", "regular supermarket flour", "plain flour", "can i use regular", "protein percentage", "ap flour"],
+    tag: "Flour Science & Hydration Adjustment",
+    answer: `You can bake sourdough with regular supermarket All-Purpose (AP) flour, but adjustments are necessary:<br><br>
+<ul>
+  <li><strong>Protein Content:</strong> Supermarket AP flour usually has 9.5%–10.5% protein, whereas bread flour has 12.0%–13.5%. Lower protein means weaker gluten structure.</li>
+  <li><strong>Hydration Adjustment:</strong> Drop your recipe's water ratio! If a recipe calls for 75% hydration, reduce it to <strong>65%–68%</strong> for AP flour. Excess water will make AP dough sludgy and impossible to shape.</li>
+  <li><strong>Handling:</strong> Give it 1–2 extra sets of coil folds or stretch-and-folds during the first 90 minutes to compensate for the weaker gluten matrix.</li>
+</ul>`,
+    cheerful: "Match your hydration to your flour's protein strength! 🌾"
   }
 ];
 
@@ -382,18 +441,36 @@ const OFF_TOPIC_PATTERNS = [/weather/i, /recipe for (pizza|pasta|cake|cookies|ch
 //  Helpers
 // ─────────────────────────────────────────────
 function normalize(text) {
-  return text.toLowerCase().replace(/['']/g, "'").replace(/[^a-z0-9 ']/g, " ").replace(/\s+/g, " ").trim();
+  return text
+    .toLowerCase()
+    .replace(/[°º]/g, "")           // remove degree signs so 31°C becomes 31c
+    .replace(/['']/g, "'")
+    .replace(/[^a-z0-9 ']/g, " ")   // replace punctuation with space
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function matchKB(text) {
   const n = normalize(text);
+  
+  // Pass 1: Direct phrase match (longest keys evaluated first)
+  let bestMatch = null;
+  let maxLen = 0;
   for (const entry of KB) {
-    if (entry.keys.some(k => n.includes(k))) return entry;
+    for (const k of entry.keys) {
+      const normK = normalize(k);
+      if (n.includes(normK) && normK.length > maxLen) {
+        maxLen = normK.length;
+        bestMatch = entry;
+      }
+    }
   }
-  // fuzzy: check individual words from keys
+  if (bestMatch) return bestMatch;
+
+  // Pass 2: Keyword overlap (matches if 2+ core baking keywords appear)
   for (const entry of KB) {
     const allWords = entry.keys.join(" ");
-    const keywords = [...new Set(allWords.split(" ").filter(w => w.length > 4))];
+    const keywords = [...new Set(normalize(allWords).split(" ").filter(w => w.length >= 4))];
     const matched = keywords.filter(w => n.includes(w));
     if (matched.length >= 2) return entry;
   }
@@ -483,32 +560,28 @@ I'll pass you along to a human who can help with that. In the meantime, can I an
     return entry;
   }
 
-  // — No match: Two-Strike Rule
+// — No match: Two-Strike Rule
   strikeCount++;
   if (strikeCount === 1) {
     awaitingTopic = true;
     return {
-      tag: "Hmm… 🤔",
-      answer: `I'm not quite sure I caught that! Sourdough has a big vocabulary, so let me make sure I understand.<br><br>
-Could you rephrase or tell me which sourdough topic you're curious about? For example:<br>
-<ul>
-  <li>Starter & fermentation</li>
-  <li>Hydration & dough handling</li>
-  <li>Proofing & shaping</li>
-  <li>Scoring & baking</li>
-  <li>Crust & flavour</li>
-</ul>`,
+      tag: "Needs Clarification",
+      answer: "I couldn't find an exact answer for that sourdough question. Could you tell me more or try rephrasing it?",
       cheerful: null
     };
   } else {
-    // Second strike → offer human handoff
+    // Strike 2: Prevent food waste & redirect to human support
     strikeCount = 0;
+    awaitingTopic = false;
     return {
-      tag: "Let's Get You Help",
-      answer: `I'm sorry, I've had two goes and I'm still not sure I understand your question — and I don't want to give you wrong information! 🙏<br><br>
-It's probably best I <strong>connect you with a human expert</strong> who can help you more precisely. You can reach one of our instructors at:<br><br>
-📧 <strong>support@sourdoughlearning.example.com</strong><br><br>
-In the meantime, if there's a different sourdough topic I can help with, I'm still here!`,
+      tag: "Community Handoff",
+      answer: `I'm not 100% certain about this specific baking situation, and I don't want you to waste ingredients.<br><br>
+Please contact our Community Mentor or WhatsApp support for personalised help.<br><br>
+Meanwhile, explore:<br>
+• Fermentation<br>
+• Starter Care<br>
+• Hydration<br>
+• Proofing`,
       cheerful: null
     };
   }
